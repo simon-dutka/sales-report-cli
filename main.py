@@ -49,3 +49,21 @@ def calculate_by_field(transactions, field_name):
         values["margin"] = values["profit"] / values["revenue"] * 100
 
     return groups
+
+
+def find_top_products(transactions):
+    calculated = calculate_by_field(transactions, "product")
+
+    top_revenue = max(calculated.items(), key=lambda item: item[1]["revenue"])
+    top_profit = max(calculated.items(), key=lambda item: item[1]["profit"])
+    top_quantity = max(calculated.items(), key=lambda item: item[1]["quantity"])
+
+    top_revenue_pair = (top_revenue[0], top_revenue[1]["revenue"])
+    top_profit_pair = (top_profit[0], top_profit[1]["profit"])
+    top_quantity_pair = (top_quantity[0], top_quantity[1]["quantity"])
+
+    return {
+        "by_revenue": top_revenue_pair,
+        "by_profit": top_profit_pair,
+        "by_quantity": top_quantity_pair,
+    }
