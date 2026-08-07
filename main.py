@@ -28,3 +28,24 @@ def calculate_overall(transactions):
     overall["margin"] = overall["profit"] / overall["revenue"] * 100
 
     return overall
+
+
+def calculate_by_field(transactions, field_name):
+    groups = {}
+
+    for transaction in transactions:
+        key = transaction[field_name]
+
+        if key not in groups:
+            groups[key] = {"revenue": 0, "cost": 0, "quantity": 0}
+
+        groups[key]["revenue"] += transaction["sell_price"] * transaction["quantity"]
+        groups[key]["cost"] += transaction["cost_price"] * transaction["quantity"]
+        groups[key]["quantity"] += transaction["quantity"]
+
+    for key, values in groups.items():
+        values["profit"] = values["revenue"] - values["cost"]
+
+        values["margin"] = values["profit"] / values["revenue"] * 100
+
+    return groups
