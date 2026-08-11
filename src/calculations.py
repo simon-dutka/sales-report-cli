@@ -1,3 +1,6 @@
+from src.data_loader import get_data
+
+
 def calculate_overall(transactions):
     overall = {"revenue": 0, "cost": 0, "profit": 0, "margin": 0}
 
@@ -49,3 +52,12 @@ def find_top_products(transactions):
         "by_profit": top_profit_pair,
         "by_quantity": top_quantity_pair,
     }
+
+
+def generate_report_data(csv_file):
+    transactions = get_data(csv_file)
+    overall = calculate_overall(transactions)
+    by_category = calculate_by_field(transactions, "category")
+    by_salesperson = calculate_by_field(transactions, "salesperson")
+    top_products = find_top_products(transactions)
+    return overall, by_category, by_salesperson, top_products
