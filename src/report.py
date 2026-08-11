@@ -2,14 +2,13 @@ import shutil
 
 
 def print_report(overall, by_category, by_salesperson, top_products):
-    terminal_width = shutil.get_terminal_size().columns
 
     label_width = 12
     name_width = 15
     top_label_width = 16
     indent = "  "
 
-    print(f"{'SALES REPORT':^{terminal_width}}\n")
+    print(f"SALES REPORT\n")
     print("Overall:")
     print(f"{indent}{'Revenue:':<{label_width}}{overall['revenue']:.2f}")
     print(f"{indent}{'Cost:':<{label_width}}{overall['cost']:.2f}")
