@@ -1,39 +1,51 @@
-import shutil
-
-
-def print_report(overall, by_category, by_salesperson, top_products):
+def build_report_lines(overall, by_category, by_salesperson, top_products):
+    lines = []
 
     label_width = 12
     name_width = 15
     top_label_width = 16
     indent = "  "
 
-    print(f"SALES REPORT\n")
-    print("Overall:")
-    print(f"{indent}{'Revenue:':<{label_width}}{overall['revenue']:.2f}")
-    print(f"{indent}{'Cost:':<{label_width}}{overall['cost']:.2f}")
-    print(f"{indent}{'Profit:':<{label_width}}{overall['profit']:.2f}")
-    print(f"{indent}{'Margin:':<{label_width}}{overall['margin']:.2f}%")
+    lines.append("SALES REPORT\n")
+    lines.append("Overall:")
+    lines.append(f"{indent}{'Revenue:':<{label_width}}{overall['revenue']:.2f}")
+    lines.append(f"{indent}{'Cost:':<{label_width}}{overall['cost']:.2f}")
+    lines.append(f"{indent}{'Profit:':<{label_width}}{overall['profit']:.2f}")
+    lines.append(f"{indent}{'Margin:':<{label_width}}{overall['margin']:.2f}%")
 
-    print("\nBy category:")
+    lines.append("\nBy category:")
     for category, values in by_category.items():
-        print(
+        lines.append(
             f"{indent}{category:<{name_width}}revenue: {values['revenue']:.2f}  profit: {values['profit']:.2f}  margin: {values['margin']:.2f}%"
         )
 
-    print("\nBy sales person:")
+    lines.append("\nBy sales person:")
     for salesperson, values in by_salesperson.items():
-        print(
+        lines.append(
             f"{indent}{salesperson:<{name_width}}revenue: {values['revenue']:.2f}  profit: {values['profit']:.2f}  margin: {values['margin']:.2f}%"
         )
 
-    print("\nTop product:")
-    print(
+    lines.append("\nTop product:")
+    lines.append(
         f"{indent}{'By units sold:':<{top_label_width}}{top_products['by_quantity'][0]} ({top_products['by_quantity'][1]} units)"
     )
-    print(
+    lines.append(
         f"{indent}{'By revenue:':<{top_label_width}}{top_products['by_revenue'][0]} ({top_products['by_revenue'][1]:.2f})"
     )
-    print(
+    lines.append(
         f"{indent}{'By profit:':<{top_label_width}}{top_products['by_profit'][0]} ({top_products['by_profit'][1]:.2f})"
     )
+
+    return lines
+
+
+def print_report(overall, by_category, by_salesperson, top_products):
+    lines = build_report_lines(overall, by_category, by_salesperson, top_products)
+    for line in lines:
+        print(line)
+
+
+def save_report_to_file(overall, by_category, by_salesperson, top_products, filepath):
+    lines = build_report_lines(overall, by_category, by_salesperson, top_products)
+    with open(filepath, "w") as f:
+        f.writelines(line + "\n" for line in lines)
