@@ -7,6 +7,7 @@ import inquirer
 from src.calculations import (
     generate_report_data,
 )
+from src.data_loader import MissingFieldsError
 from src.report import print_report, save_report_to_file
 
 
@@ -71,10 +72,13 @@ def main_menu(loaded_csv_file=None):
             if loaded_csv_file is None:
                 print("Please load a csv file first.")
             else:
-                overall, by_category, by_salesperson, top_products = (
-                    generate_report_data(loaded_csv_file)
-                )
-                print_report(overall, by_category, by_salesperson, top_products)
+                try:
+                    overall, by_category, by_salesperson, top_products = (
+                        generate_report_data(loaded_csv_file)
+                    )
+                    print_report(overall, by_category, by_salesperson, top_products)
+                except MissingFieldsError as e:
+                    print(e)
 
             input("\nPress Enter to return to menu ")
         case 3:
@@ -83,17 +87,21 @@ def main_menu(loaded_csv_file=None):
             if loaded_csv_file is None:
                 print("Please load a csv file first.")
             else:
-                overall, by_category, by_salesperson, top_products = (
-                    generate_report_data(loaded_csv_file)
-                )
-                save_report_to_file(
-                    overall,
-                    by_category,
-                    by_salesperson,
-                    top_products,
-                    "./reports",
-                )
-                print("Report saved successfully")
+                try:
+                    overall, by_category, by_salesperson, top_products = (
+                        generate_report_data(loaded_csv_file)
+                    )
+                    save_report_to_file(
+                        overall,
+                        by_category,
+                        by_salesperson,
+                        top_products,
+                        "./reports",
+                    )
+                    print("Report saved successfully")
+                except MissingFieldsError as e:
+                    print(e)
+
             input("\nPress Enter to return to menu ")
         case 4:
             sys.exit()
