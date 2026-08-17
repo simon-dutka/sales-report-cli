@@ -1,3 +1,7 @@
+import os
+from datetime import datetime, timezone
+
+
 def build_report_lines(overall, by_category, by_salesperson, top_products):
     lines = []
 
@@ -45,7 +49,20 @@ def print_report(overall, by_category, by_salesperson, top_products):
         print(line)
 
 
-def save_report_to_file(overall, by_category, by_salesperson, top_products, filepath):
+def get_report_filename(folder):
+    counter = 1
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    while True:
+        filepath = f"{folder}/report_{timestamp}_{counter}.txt"
+        if not os.path.exists(filepath):
+            return filepath
+        counter += 1
+
+
+def save_report_to_file(overall, by_category, by_salesperson, top_products, folder):
+    filename = get_report_filename(folder)
+
     lines = build_report_lines(overall, by_category, by_salesperson, top_products)
-    with open(filepath, "w") as f:
+    with open(filename, "w") as f:
         f.writelines(line + "\n" for line in lines)
