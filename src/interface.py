@@ -16,8 +16,20 @@ def clear_screen():
 
 
 def choose_csv_file(folder="./data"):
-    all_files = os.listdir(folder)
+    try:
+        all_files = os.listdir(folder)
+    except FileNotFoundError:
+        print(f"Folder: {folder} not found. Creating it now.")
+        os.makedirs(folder)
+        input("\nPress Enter to return to menu ")
+        return None
+
     csv_files = [f for f in all_files if f.endswith(".csv")]
+
+    if not csv_files:
+        print(f"No csv file found in {folder}")
+        input("\nPress Enter to return to menu ")
+        return None
 
     questions = [
         inquirer.List(
