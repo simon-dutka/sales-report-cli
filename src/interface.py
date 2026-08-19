@@ -73,10 +73,22 @@ def main_menu(loaded_csv_file=None):
                 print("Please load a csv file first.")
             else:
                 try:
-                    overall, by_category, by_salesperson, top_products = (
-                        generate_report_data(loaded_csv_file)
+                    (
+                        overall,
+                        by_category,
+                        by_salesperson,
+                        top_products,
+                        missing_value_rows,
+                        invalid_data_rows,
+                    ) = generate_report_data(loaded_csv_file)
+                    print_report(
+                        overall,
+                        by_category,
+                        by_salesperson,
+                        top_products,
+                        missing_value_rows,
+                        invalid_data_rows,
                     )
-                    print_report(overall, by_category, by_salesperson, top_products)
                 except MissingFieldsError as e:
                     print(e)
 
@@ -88,14 +100,21 @@ def main_menu(loaded_csv_file=None):
                 print("Please load a csv file first.")
             else:
                 try:
-                    overall, by_category, by_salesperson, top_products = (
-                        generate_report_data(loaded_csv_file)
-                    )
+                    (
+                        overall,
+                        by_category,
+                        by_salesperson,
+                        top_products,
+                        missing_value_rows,
+                        invalid_data_rows,
+                    ) = generate_report_data(loaded_csv_file)
                     save_report_to_file(
                         overall,
                         by_category,
                         by_salesperson,
                         top_products,
+                        missing_value_rows,
+                        invalid_data_rows,
                         "./reports",
                     )
                     print("Report saved successfully")

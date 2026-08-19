@@ -2,7 +2,14 @@ import os
 from datetime import datetime, timezone
 
 
-def build_report_lines(overall, by_category, by_salesperson, top_products):
+def build_report_lines(
+    overall,
+    by_category,
+    by_salesperson,
+    top_products,
+    missing_value_rows,
+    invalid_data_rows,
+):
     lines = []
 
     label_width = 12
@@ -10,8 +17,22 @@ def build_report_lines(overall, by_category, by_salesperson, top_products):
     top_label_width = 16
     indent = "  "
 
-    lines.append("SALES REPORT\n")
-    lines.append("Overall:")
+    lines.append("SALES REPORT")
+
+    if missing_value_rows or invalid_data_rows:
+        lines.append("\nERRORS:")
+
+        if missing_value_rows:
+            lines.append(
+                f"{indent}Rows skipped (missing values): {', '.join(str(n) for n in missing_value_rows)}"
+            )
+
+        if invalid_data_rows:
+            lines.append(
+                f"{indent}Rows skipped (invalid data): {', '.join(str(n) for n in invalid_data_rows)}"
+            )
+
+    lines.append("\nOverall:")
     lines.append(f"{indent}{'Revenue:':<{label_width}}{overall['revenue']:.2f}")
     lines.append(f"{indent}{'Cost:':<{label_width}}{overall['cost']:.2f}")
     lines.append(f"{indent}{'Profit:':<{label_width}}{overall['profit']:.2f}")
@@ -43,8 +64,22 @@ def build_report_lines(overall, by_category, by_salesperson, top_products):
     return lines
 
 
-def print_report(overall, by_category, by_salesperson, top_products):
-    lines = build_report_lines(overall, by_category, by_salesperson, top_products)
+def print_report(
+    overall,
+    by_category,
+    by_salesperson,
+    top_products,
+    missing_value_rows,
+    invalid_data_rows,
+):
+    lines = build_report_lines(
+        overall,
+        by_category,
+        by_salesperson,
+        top_products,
+        missing_value_rows,
+        invalid_data_rows,
+    )
     for line in lines:
         print(line)
 
@@ -60,9 +95,24 @@ def get_report_filename(folder):
         counter += 1
 
 
-def save_report_to_file(overall, by_category, by_salesperson, top_products, folder):
+def save_report_to_file(
+    overall,
+    by_category,
+    by_salesperson,
+    top_products,
+    missing_value_rows,
+    invalid_data_rows,
+    folder,
+):
     filename = get_report_filename(folder)
 
-    lines = build_report_lines(overall, by_category, by_salesperson, top_products)
+    lines = build_report_lines(
+        overall,
+        by_category,
+        by_salesperson,
+        top_products,
+        missing_value_rows,
+        invalid_data_rows,
+    )
     with open(filename, "w") as f:
         f.writelines(line + "\n" for line in lines)

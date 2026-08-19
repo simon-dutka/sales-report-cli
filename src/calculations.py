@@ -55,9 +55,17 @@ def find_top_products(transactions):
 
 
 def generate_report_data(csv_file):
-    transactions = get_data(csv_file)
+    transactions, missing_value_rows, invalid_data_rows = get_data(csv_file)
     overall = calculate_overall(transactions)
     by_category = calculate_by_field(transactions, "category")
     by_salesperson = calculate_by_field(transactions, "salesperson")
     top_products = find_top_products(transactions)
-    return overall, by_category, by_salesperson, top_products
+
+    return (
+        overall,
+        by_category,
+        by_salesperson,
+        top_products,
+        missing_value_rows,
+        invalid_data_rows,
+    )
