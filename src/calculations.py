@@ -10,7 +10,11 @@ def calculate_overall(transactions):
         overall["cost"] += transaction["cost_price"] * transaction["quantity"]
 
     overall["profit"] = overall["revenue"] - overall["cost"]
-    overall["margin"] = overall["profit"] / overall["revenue"] * 100
+
+    if overall["revenue"] == 0:
+        overall["margin"] = 0
+    else:
+        overall["margin"] = overall["profit"] / overall["revenue"] * 100
 
     return overall
 
@@ -31,7 +35,10 @@ def calculate_by_field(transactions, field_name):
     for key, values in groups.items():
         values["profit"] = values["revenue"] - values["cost"]
 
-        values["margin"] = values["profit"] / values["revenue"] * 100
+        if values["revenue"] == 0:
+            values["margin"] = 0
+        else:
+            values["margin"] = values["profit"] / values["revenue"] * 100
 
     return groups
 
