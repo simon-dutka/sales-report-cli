@@ -1,6 +1,6 @@
 import pytest
 
-from src.calculations import calculate_overall
+from src.calculations import calculate_by_field, calculate_overall
 
 
 def test_calculate_overall_single_transaction():
@@ -17,6 +17,7 @@ def test_calculate_overall_single_transaction():
     ]
 
     result = calculate_overall(transactions)
+
     assert result["revenue"] == 200
     assert result["cost"] == 100
     assert result["profit"] == 100
@@ -37,6 +38,7 @@ def test_calculate_overall_quantity_multiplication():
     ]
 
     result = calculate_overall(transactions)
+
     assert result["revenue"] == 450
     assert result["cost"] == 240
     assert result["profit"] == 210
@@ -57,6 +59,7 @@ def test_calculate_overall_zero_revenue():
     ]
 
     result = calculate_overall(transactions)
+
     assert result["revenue"] == 0
     assert result["cost"] == 40
     assert result["profit"] == -40
@@ -91,3 +94,91 @@ def test_calculate_overall_multiple_transactions():
     assert result["cost"] == 520
     assert result["profit"] == 700
     assert result["margin"] == pytest.approx(57.37, rel=0.01)
+
+
+def test_calculate_by_field_groups_by_category():
+    transactions = [
+        {
+            "date": "2026-01-10",
+            "product": "Laptop",
+            "category": "Electronics",
+            "salesperson": "Bob",
+            "cost_price": 700,
+            "sell_price": 1500,
+            "quantity": 2,
+        },
+        {
+            "date": "2026-01-11",
+            "product": "Mouse",
+            "category": "Electronics",
+            "salesperson": "Ann",
+            "cost_price": 40,
+            "sell_price": 80,
+            "quantity": 6,
+        },
+        {
+            "date": "2026-01-10",
+            "product": "Chair",
+            "category": "Furniture",
+            "salesperson": "Cara",
+            "cost_price": 120,
+            "sell_price": 300,
+            "quantity": 3,
+        },
+    ]
+
+    result = calculate_by_field(transactions, "category")
+
+    assert result["Electronics"]["revenue"] == 3480
+    assert result["Electronics"]["cost"] == 1640
+    assert result["Electronics"]["profit"] == 1840
+    assert result["Electronics"]["margin"] == pytest.approx(52.87, rel=0.01)
+
+    assert result["Furniture"]["revenue"] == 900
+    assert result["Furniture"]["cost"] == 360
+    assert result["Furniture"]["profit"] == 540
+    assert result["Furniture"]["margin"] == 60
+
+
+def test_calculate_by_field_zero_revenue():
+    transactions = [
+        {
+            "date": "2026-01-10",
+            "product": "Laptop",
+            "category": "Electronics",
+            "salesperson": "Bob",
+            "cost_price": 700,
+            "sell_price": 1500,
+            "quantity": 2,
+        },
+        {
+            "date": "2026-01-11",
+            "product": "Mouse",
+            "category": "Electronics",
+            "salesperson": "Ann",
+            "cost_price": 40,
+            "sell_price": 80,
+            "quantity": 6,
+        },
+        {
+            "date": "2026-01-10",
+            "product": "Chair",
+            "category": "Furniture",
+            "salesperson": "Cara",
+            "cost_price": 120,
+            "sell_price": 0,
+            "quantity": 1,
+        },
+    ]
+
+    result = calculate_by_field(transactions, "category")
+
+    assert result["Electronics"]["revenue"] == 3480
+    assert result["Electronics"]["cost"] == 1640
+    assert result["Electronics"]["profit"] == 1840
+    assert result["Electronics"]["margin"] == pytest.approx(52.87, rel=0.01)
+
+    assert result["Furniture"]["revenue"] == 0
+    assert result["Furniture"]["cost"] == 120
+    assert result["Furniture"]["profit"] == -120
+    assert result["Furniture"]["margin"] == 0
