@@ -114,5 +114,11 @@ def save_report_to_file(
         missing_value_rows,
         invalid_data_rows,
     )
+
+    try:
+        os.makedirs(folder)
+    except FileExistsError:
+        pass
+
     with open(filename, "w") as f:
         f.writelines(line + "\n" for line in lines)
